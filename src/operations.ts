@@ -26,8 +26,8 @@ export class HomepageWorkflow {
     ctxt.logger.info('setting viewport...');
     await page.setViewport({ width: 1200, height: 800, deviceScaleFactor: 2 });
 
-    // TODO: figure out https error
-    const url = `http://${domain}`;
+    // Go to the https site
+    const url = `https://${domain}`;
     ctxt.logger.info(`goto page... ${url}`);
     await page.goto(url);
     const pageTitle = await page.title();
