@@ -12,7 +12,6 @@ export class HomepageWorkflow {
     const executablePath = process.env.IS_LOCAL ? "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" : await chromium.executablePath();
     ctxt.logger.info(`Chromium executable path is: ${executablePath}`);
 
-    const url = 'https://' + domain;
     ctxt.logger.info('Launching browser...' + chromium.args.toString());
     const browser = await puppeteer.launch({
       args: chromium.args,
@@ -26,8 +25,11 @@ export class HomepageWorkflow {
     const page = await browser.newPage();
     ctxt.logger.info('setting viewport...');
     await page.setViewport({ width: 1200, height: 800, deviceScaleFactor: 2 });
+
+    // TODO: figure out https error
+    const url = `http://${domain}`;
     ctxt.logger.info(`goto page... ${url}`);
-    await page.goto("http://example.com");
+    await page.goto(url);
     const pageTitle = await page.title();
     ctxt.logger.info(`Page title: ${pageTitle}`);
 
