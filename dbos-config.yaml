@@ -13,6 +13,8 @@ database:
   app_db_client: knex
   migrate:
     - echo "no migrations"
+env:
+  AWS_EXECUTION_ENV: 20.x
 runtimeConfig:
   entrypoints:
     - dist/operations.js

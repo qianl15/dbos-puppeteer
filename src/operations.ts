@@ -3,26 +3,31 @@ import puppeteer from 'puppeteer-core';
 import chromium from '@sparticuz/chromium';
 
 chromium.setHeadlessMode = true;
-chromium.setGraphicsMode = false;
+chromium.setGraphicsMode = true;
 
 export class HomepageWorkflow {
-  @Communicator()
+  @Communicator({retriesAllowed: false})
   static async screenshotCommunicator(ctxt: CommunicatorContext, domain:string) {
     ctxt.logger.info("Taking Screenshot");
     const executablePath = process.env.IS_LOCAL ? "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" : await chromium.executablePath();
     ctxt.logger.info(`Chromium executable path is: ${executablePath}`);
 
     const url = 'https://' + domain;
-    ctxt.logger.info('Launching browser...');
+    ctxt.logger.info('Launching browser...' + chromium.args.toString());
     const browser = await puppeteer.launch({
       args: chromium.args,
       defaultViewport: chromium.defaultViewport,
       executablePath: executablePath,
-      headless: chromium.headless,
+      headless: true,
+      dumpio: true,
+      ignoreHTTPSErrors: true,
     });
+    ctxt.logger.info('Browser launched, creating new page...');
     const page = await browser.newPage();
+    ctxt.logger.info('setting viewport...');
     await page.setViewport({ width: 1200, height: 800, deviceScaleFactor: 2 });
-    await page.goto(url, { waitUntil: 'networkidle2' });
+    ctxt.logger.info(`goto page... ${url}`);
+    await page.goto("http://example.com");
     const pageTitle = await page.title();
     ctxt.logger.info(`Page title: ${pageTitle}`);
 
@@ -30,6 +35,7 @@ export class HomepageWorkflow {
     const maxHeight = 2000;
 
     // Get the dimensions of the full page
+    ctxt.logger.info('page evaluate...');
     const dimensions = await page.evaluate(() => {
       return {
         width: document.documentElement.scrollWidth,
@@ -39,6 +45,7 @@ export class HomepageWorkflow {
 
     const clipHeight = Math.min(dimensions.height, maxHeight);
 
+    ctxt.logger.info('page screenshot...');
     const base64String = await page.screenshot({
       encoding: 'base64',
       clip: { x: 0, y: 0, width: dimensions.width, height: clipHeight}
