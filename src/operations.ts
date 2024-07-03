@@ -10,7 +10,7 @@ let browser: Browser; // Reuse browser instance across invocations
 export class HomepageWorkflow {
   @DBOSInitializer()
   static async init(ctxt: InitContext) {
-    const executablePath = process.env.IS_LOCAL ? "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" : await chromium.executablePath();
+    const executablePath = process.env.LOCAL_CHROME_PATH ?? await chromium.executablePath();
     ctxt.logger.info(`Chromium executable path is: ${executablePath}`);
     ctxt.logger.info('Launching browser...' + chromium.args.toString());
     browser = await puppeteer.launch({
