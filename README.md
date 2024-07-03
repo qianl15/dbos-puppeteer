@@ -6,7 +6,23 @@ The key idea is to use `puppeteer-core` and `@sparticuz/chromium`, and set an en
 env:
   AWS_EXECUTION_ENV: 20.x
 ```
+### Deploy to DBOS Cloud
 
+It's fairly simple to deploy this app to DBOS Cloud:
+```
+# Download this repo.
+git clone https://github.com/qianl15/dbos-puppeteer.git
+cd dbos-puppeteer/
+npm i
+npm run build
+npx dbos-cloud login
+npx dbos-cloud app register -d <your_db_name> # Or provision a new DB
+npx dbos-cloud app deploy
+```
+
+You should be able to take a screenshot now with your app! Try `https://<your username>-dbos-puppeteer.cloud.dbos.dev/screenshot/google.com`
+
+### Under the Hood
 In order to reuse the browser instance across requests, I create a browser instance as a `@DBOSInitializer()`.
 On DBOS Cloud, it will use the Chrome binary provided by `@sparticuz/chromium`. To test locally, please set `LOCAL_CHROME_PATH` to your local Chrome executable. 
 ```js
