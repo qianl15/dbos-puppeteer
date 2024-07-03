@@ -40,7 +40,7 @@ export class HomepageWorkflow {
 
     // Define the maximum height for the screenshot
     // TODO: due to DBOS Cloud 512MB memory limit, we need to limit the height of the screenshot
-    const maxHeight = 1000;
+    const maxHeight = 800;
 
     // Get the dimensions of the full page
     ctxt.logger.info('page evaluate...');
